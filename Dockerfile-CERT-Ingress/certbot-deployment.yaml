@@ -1,0 +1,37 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: certbot
+  name: certbot
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: certbot
+    spec:
+      containers:
+      - command:
+        - /bin/sh
+        - -c
+        - trap exit TERM; while :; do certbot renew; sleep 12h & wait ${!}; done;
+        image: certbot/certbot
+        name: certbot
+        resources: {}
+        volumeMounts:
+        - mountPath: /etc/letsencrypt
+          name: certbot-claim0
+        - mountPath: /var/www/certbot
+          name: certbot-claim1
+      volumes:
+      - name: certbot-claim0
+        persistentVolumeClaim:
+          claimName: certbot-claim0
+      - name: certbot-claim1
+        persistentVolumeClaim:
+          claimName: certbot-claim1
+status: {}
