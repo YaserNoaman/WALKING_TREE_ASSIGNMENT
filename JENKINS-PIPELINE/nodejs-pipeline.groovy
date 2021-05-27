@@ -1,5 +1,7 @@
 
 
+
+
 pipeline {
   environment {
     registry = "yasernoaman/docker-image-nodejs"
